@@ -259,6 +259,9 @@ func handleClient(client *Client) {
 	greeting := "220 " + gConfig["GSMTP_HOST_NAME"] +
 		" SMTP Guerrilla-SMTPd #" + strconv.FormatInt(client.clientId, 10) + " (" + strconv.Itoa(len(sem)) + ") " + time.Now().Format(time.RFC1123Z)
 	advertiseTls := "250-STARTTLS\r\n"
+	if TLSconfig == nil {
+		advertiseTls = ""
+	}
 	for i := 0; i < 100; i++ {
 		switch client.state {
 		case 0:
@@ -318,6 +321,10 @@ func handleClient(client *Client) {
 				responseAdd(client, "354 Enter message, ending with \".\" on a line by itself")
 				client.state = 2
 			case (strings.Index(cmd, "STARTTLS") == 0) && !client.tls_on:
+				if TLSconfig == nil {
+					responseAdd(client, "500 Error: TLS not enabled")
+					break
+				}
 				responseAdd(client, "220 Ready to start TLS")
 				// go to start TLS state
 				client.state = 3
