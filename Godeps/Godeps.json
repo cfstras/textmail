@@ -1,0 +1,22 @@
+{
+	"ImportPath": "github.com/cfstras/textmail",
+	"GoVersion": "go1.5.1",
+	"Deps": [
+		{
+			"ImportPath": "github.com/google/go-querystring/query",
+			"Rev": "2a60fc2ba6c19de80291203597d752e9ba58e4c0"
+		},
+		{
+			"ImportPath": "github.com/micrypt/go-plivo/plivo",
+			"Rev": "1c53ea6b4f0745cece1fe0e8d5e06b3e3fa5d233"
+		},
+		{
+			"ImportPath": "github.com/sloonz/go-iconv",
+			"Rev": "24f305468a745f731d94b7f4a37317f70db9a5e1"
+		},
+		{
+			"ImportPath": "github.com/sloonz/go-qprintable",
+			"Rev": "e2d1cacbb8fa8f3158a2d7e7f08d9a82b7036fee"
+		}
+	]
+}

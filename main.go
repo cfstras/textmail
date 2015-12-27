@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/micrypt/go-plivo/plivo"
+	"github.com/cfstras/textmail/Godeps/_workspace/src/github.com/micrypt/go-plivo/plivo"
 )
 
 var (
