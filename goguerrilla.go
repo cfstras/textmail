@@ -499,27 +499,74 @@ func saveMail() {
 		add_head += "	" + time.Now().Format(time.RFC1123Z) + "\r\n"
 		client.data = /*compress(*/ add_head + client.data //)
 
-		callCallback(
-			to,
+		msg := makeMessage(to,
 			client.mail_from,
 			client.subject,
 			client.data,
 			client.hash,
 			client.address)
 
+		callCallback(msg)
+
 		client.savedNotify <- 1
 	}
 }
 
+type Header struct {
+	K, V string
+}
+
 type Message struct {
-	To, From, Subject, Body, Hash, Hostname string
+	To, From, Subject    string
+	Headers              []Header
+	Body, Hash, Hostname string
 }
 
 var callback func(Message)
 
-func callCallback(to, mailFrom, subject, body, hash, hostname string) {
+var HeaderRegex = regexp.MustCompile(`^(([a-zA-Z\-0-9]+): (.+)|\s(.+))$`)
+
+func splitHeaders(body string) ([]Header, string) {
+	body = strings.Replace(body, "\r\n", "\n", -1)
+	lines := strings.Split(body, "\n")
+	body = ""
+	header := true
+	headers := []Header{}
+	for _, l := range lines {
+		if !header || !HeaderRegex.MatchString(l) {
+			header = false
+			if body == "" {
+				body = l
+			} else {
+				body += "\n" + l
+			}
+		} else {
+			match := HeaderRegex.FindStringSubmatch(l)
+			key := match[2]
+			value := match[3]
+			cont := match[4]
+			if key == "" && len(headers) > 0 && cont != "" {
+				head := &headers[len(headers)-1]
+				head.V = head.V + cont
+			} else if key != "" && value != "" {
+				h := Header{key, value}
+				headers = append(headers, h)
+			}
+		}
+	}
+	return headers, body
+}
+
+func makeMessage(to, mailFrom, subject, body, hash, hostname string) Message {
+	headers, body := splitHeaders(body)
+
+	msg := Message{to, mailFrom, subject, headers, body, hash, hostname}
+	return msg
+}
+
+func callCallback(msg Message) {
 	if callback != nil {
-		callback(Message{to, mailFrom, subject, body, hash, hostname})
+		callback(msg)
 	}
 }
 

@@ -20,8 +20,8 @@ var (
 
 	client *plivo.Client
 
-	HeaderRegex = regexp.MustCompile(`^(([a-zA-Z\-0-9]+): .+|\s.+)$`)
-	toRegex     *regexp.Regexp
+	mailPlusRegex = regexp.MustCompile(`^\s*([^\+@]*)(\+(?:[^@]*))?(@.*)\s*$`)
+	toRegex       *regexp.Regexp
 )
 
 func main() {
@@ -61,28 +61,14 @@ func sendMail(msg Message) {
 	toAddress := toMatch[1]
 	toAddress = strings.TrimPrefix(toAddress, "+")
 
-	body := strings.Replace(msg.Body, "\r\n", "\n", -1)
-	lines := strings.Split(body, "\n")
-	body = ""
-	header := true
-	for _, l := range lines {
-		if !header || !HeaderRegex.MatchString(l) {
-			header = false
-			if body == "" {
-				body = l
-			} else {
-				body += "\n" + l
-			}
-		}
-	}
-	msg.Body = body
-
 	fmt.Printf("Got: %+v\n", msg)
+	clearBody := getClearBody(msg)
+	fmt.Printf("Clear Body:", clearBody)
 
 	mp := &plivo.MessageSendParams{}
 	mp.Dst = toAddress
 	mp.Src = fromNumber
-	mp.Text = "[" + msg.From + "] " + msg.Subject + ":\n" + msg.Body
+	mp.Text = "[" + msg.From + "] " + msg.Subject + ":\n" + clearBody
 
 	respBody, _, err := client.Message.Send(mp)
 	if err != nil {
@@ -90,4 +76,61 @@ func sendMail(msg Message) {
 	} else {
 		log.Printf("Sent: %+v\n", respBody)
 	}
+}
+
+func getClearBody(msg Message) string {
+	for _, h := range msg.Headers {
+		if h.K != "Content-Type" {
+			continue
+		}
+		split := strings.Split(h.V, ";")
+		if len(split) < 2 {
+			continue
+		}
+		t := split[0]
+		if !strings.HasPrefix(t, "multipart") {
+			continue
+		}
+		boundary := ""
+		for _, kv := range split[1:] {
+			splitkv := strings.Split(kv, "=")
+			if len(splitkv) == 2 && splitkv[0] == "boundary" {
+				boundary = strings.Trim(splitkv[1], `"`)
+				break
+			}
+		}
+		if boundary == "" {
+			continue
+		}
+		split = strings.Split(msg.Body, boundary)
+		clearBody := ""
+	parts:
+		for _, part := range split {
+			part = strings.TrimPrefix(part, "--")
+			part = strings.TrimSuffix(part, "--")
+			part = strings.TrimSpace(part)
+			headers, body := splitHeaders(part)
+			for _, h2 := range headers {
+				if h2.K != "Content-Type" {
+					continue
+				}
+				if strings.Contains(h2.V, "/plain") {
+					clearBody = body
+					break parts
+				}
+			}
+		}
+		if clearBody != "" {
+			return strings.TrimSpace(clearBody)
+		}
+	}
+	return msg.Body
+}
+
+func getClearAddress(addr string) string {
+	match := mailPlusRegex.FindStringSubmatch(addr)
+	if len(match) > 1 {
+		return match[1] + match[3]
+	}
+	return addr
 }
