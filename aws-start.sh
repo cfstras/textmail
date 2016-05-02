@@ -18,7 +18,7 @@ tar -C /usr/local -xzf go1.5.2.linux-amd64.tar.gz
 export GOROOT=/usr/local/go
 export PATH=$PATH:$GOROOT/bin
 export GOBIN=$GOROOT/bin
-mkdir ~/go/ 
+mkdir -p ~/go/ 
 export GOPATH=~/go/
 export PATH=$GOPATH/bin:$PATH 
 
