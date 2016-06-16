@@ -60,8 +60,8 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/cfstras/textmail/Godeps/_workspace/src/github.com/sloonz/go-iconv"
-	"github.com/cfstras/textmail/Godeps/_workspace/src/github.com/sloonz/go-qprintable"
+	"github.com/sloonz/go-qprintable"
+	"golang.org/x/text/encoding/ianaindex"
 	"io"
 	"io/ioutil"
 	"log"
@@ -656,7 +656,13 @@ func mailTransportDecode(str string, encoding_type string, charset string) strin
 	if charset != "UTF-8" {
 		charset = fixCharset(charset)
 		// eg. charset can be "ISO-2022-JP"
-		convstr, err := iconv.Conv(str, "UTF-8", charset)
+		//convstr, err := iconv.Conv(str, "UTF-8", charset)
+		encoding, err := ianaindex.IANA.Get(charset)
+		if err != nil {
+			return str
+		}
+		decoder := encoding.NewDecoder()
+		convstr, err := decoder.String(str)
 		if err == nil {
 			return convstr
 		}

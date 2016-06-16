@@ -11,7 +11,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/cfstras/textmail/Godeps/_workspace/src/github.com/google/go-querystring/query"
+	"github.com/google/go-querystring/query"
 )
 
 const (

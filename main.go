@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/cfstras/textmail/Godeps/_workspace/src/github.com/micrypt/go-plivo/plivo"
+	"github.com/micrypt/go-plivo/plivo"
 )
 
 var (
@@ -68,7 +68,15 @@ func sendMail(msg Message) {
 	mp := &plivo.MessageSendParams{}
 	mp.Dst = toAddress
 	mp.Src = fromNumber
-	mp.Text = "[" + msg.From + "] " + msg.Subject + ":\n" + clearBody
+
+	from := msg.From
+	for _, h := range msg.Headers {
+		if h.K == "From" {
+			from = h.V
+		}
+	}
+
+	mp.Text = "[" + from + "] " + msg.Subject + ":\n" + clearBody
 
 	respBody, _, err := client.Message.Send(mp)
 	if err != nil {

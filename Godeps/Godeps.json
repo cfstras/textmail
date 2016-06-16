@@ -1,6 +1,7 @@
 {
 	"ImportPath": "github.com/cfstras/textmail",
-	"GoVersion": "go1.5.1",
+	"GoVersion": "go1.6",
+	"GodepVersion": "v74",
 	"Deps": [
 		{
 			"ImportPath": "github.com/google/go-querystring/query",
@@ -11,12 +12,24 @@
 			"Rev": "1c53ea6b4f0745cece1fe0e8d5e06b3e3fa5d233"
 		},
 		{
-			"ImportPath": "github.com/sloonz/go-iconv",
-			"Rev": "24f305468a745f731d94b7f4a37317f70db9a5e1"
-		},
-		{
 			"ImportPath": "github.com/sloonz/go-qprintable",
 			"Rev": "e2d1cacbb8fa8f3158a2d7e7f08d9a82b7036fee"
+		},
+		{
+			"ImportPath": "golang.org/x/text/encoding",
+			"Rev": "e3c902a8b2c4c420ce61514795e05b8e28a6364e"
+		},
+		{
+			"ImportPath": "golang.org/x/text/encoding/ianaindex",
+			"Rev": "e3c902a8b2c4c420ce61514795e05b8e28a6364e"
+		},
+		{
+			"ImportPath": "golang.org/x/text/encoding/internal/identifier",
+			"Rev": "e3c902a8b2c4c420ce61514795e05b8e28a6364e"
+		},
+		{
+			"ImportPath": "golang.org/x/text/transform",
+			"Rev": "e3c902a8b2c4c420ce61514795e05b8e28a6364e"
 		}
 	]
 }
