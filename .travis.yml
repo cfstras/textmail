@@ -1,4 +1,8 @@
 language: go
+script:
+  - go get
+# dont' test
+
 #before_install:
 # - sudo apt-get update -qq
 # - sudo apt-get install -qq libtagc0-dev

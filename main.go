@@ -61,20 +61,23 @@ func sendMail(msg Message) {
 	toAddress := toMatch[1]
 	toAddress = strings.TrimPrefix(toAddress, "+")
 
-	fmt.Printf("Got: %+v\n", msg)
+	fmt.Println("-------------")
+	fmt.Println("Got message from", msg.From)
 	clearBody := getClearBody(msg)
-	fmt.Printf("Clear Body:", clearBody)
 
 	mp := &plivo.MessageSendParams{}
 	mp.Dst = toAddress
 	mp.Src = fromNumber
 
 	from := msg.From
+	fmt.Println("Headers:")
 	for _, h := range msg.Headers {
+		fmt.Println(h.K, h.V)
 		if h.K == "From" {
 			from = h.V
 		}
 	}
+	fmt.Printf("Clear Body:", clearBody)
 
 	mp.Text = "[" + from + "] " + msg.Subject + ":\n" + clearBody
 

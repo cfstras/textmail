@@ -13,8 +13,10 @@ export AWS_DEFAULT_REGION=us-west-2
 export EC2_URL=ec2.$AWS_DEFAULT_REGION.amazonaws.com
 export MAIL_HOSTNAME=txt.cfs.im
 
-wget -q https://storage.googleapis.com/golang/go1.5.2.linux-amd64.tar.gz
-tar -C /usr/local -xzf go1.5.2.linux-amd64.tar.gz 
+rm -rf go*.linux-amd64.tar.gz*
+wget -q https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz
+rm -rf /usr/local/go
+tar -C /usr/local -xzf go1.6.2.linux-amd64.tar.gz
 export GOROOT=/usr/local/go
 export PATH=$PATH:$GOROOT/bin
 export GOBIN=$GOROOT/bin
