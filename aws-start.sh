@@ -29,6 +29,7 @@ export PATH=$GOPATH/bin:$PATH
 ####
 
 # install
+go clean -i
 go get -u github.com/cfstras/textmail
 cd $GOPATH/src/github.com/cfstras/textmail
 ./start-app.sh

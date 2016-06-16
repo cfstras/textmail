@@ -77,7 +77,7 @@ func sendMail(msg Message) {
 			from = h.V
 		}
 	}
-	fmt.Printf("Clear Body:", clearBody)
+	fmt.Println("Clear Body:", clearBody)
 
 	mp.Text = "[" + from + "] " + msg.Subject + ":\n" + clearBody
 
