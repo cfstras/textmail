@@ -1,8 +1,14 @@
 language: go
 script:
-  - go get
-# dont' test
+  - mkdir -p build
+  - go build -o build/textmail
 
-#before_install:
-# - sudo apt-get update -qq
-# - sudo apt-get install -qq libtagc0-dev
+deploy:
+  - provider: releases
+    api_key:
+      secure: HNB9iHDuVUW799LFmsvYREM7wvi1mRCOu0eMqCbTGPLoymSsUAlZof5OHdHHZu2vN1o1JysBlTWXxNTtlvnobPpNIF0jlCupoUB+Teg3sAUz4QMocbYDa1eIcGq7K5eFQ4APiLndsPVJzWJO9xEXhNW9k0PycynkAehJyPfS3HWn3Q2sEchxq9R1O2Lcgo1ebHFh+QgacAoWgMQC6/sBCZ/Z1kCr6RE/QLfTqtaX4og1zo73Iato8gV7l6MF/VlYkwc/1yDxsodqeQ3T4bfCcjOefVd9gvir2qWv0W6eSKn19/MtzoIN4wWIBR5yGmqmBnz2SRXq791i4ux/eiY489OwrVEwbpyq62K8WCj6tB7dKEd4AJ6dva35L2r5gwYd5qXrsDnWrJYK7F+zriw7j3fiwpKThmbO4PZitaczwfhN0/UFRavwK3PW7jN5SaObtZ/afLFu29/IFuXFCNQwMkMnpnH3rYUxwcJGWTFEHEELyyxumvAKatO2QDL4BctdvicJWhy/cYs9XxaP1ffEVALDMTLd6X+dig1Ou9D19PB/dlF1aUAAg8p8/ceKCcPvoO2Pko8nwlbAk0CGTGn/D3kn0frawXuhYvGKaVBwyQWd5yzm0XUs13e6yQTHfqoE8eYehRKrZeIdlGkLGsSMgrp/ijCN7vSU77koI+oSIkw=
+    skip_cleanup: true
+    file:
+      - build/textmail
+    on:
+      tags: true
