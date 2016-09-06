@@ -1,3 +1,5 @@
+// +build goguerilla
+
 package main
 
 import (

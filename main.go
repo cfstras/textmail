@@ -94,6 +94,7 @@ func getClearBody(msg Message) string {
 		if h.K != "Content-Type" {
 			continue
 		}
+		log.Println("munching content-type", h.V)
 		split := strings.Split(h.V, ";")
 		if len(split) < 2 {
 			continue
@@ -105,8 +106,9 @@ func getClearBody(msg Message) string {
 		boundary := ""
 		for _, kv := range split[1:] {
 			splitkv := strings.Split(kv, "=")
-			if len(splitkv) == 2 && splitkv[0] == "boundary" {
+			if len(splitkv) == 2 && strings.TrimSpace(splitkv[0]) == "boundary" {
 				boundary = strings.Trim(splitkv[1], `"`)
+				log.Println("boundary should be", boundary)
 				break
 			}
 		}
@@ -135,7 +137,7 @@ func getClearBody(msg Message) string {
 			return strings.TrimSpace(clearBody)
 		}
 	}
-	return msg.Body
+	return strings.TrimSpace(msg.Body)
 }
 
 func getClearAddress(addr string) string {

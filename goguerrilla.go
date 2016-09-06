@@ -524,7 +524,7 @@ type Message struct {
 
 var callback func(Message)
 
-var HeaderRegex = regexp.MustCompile(`^(([a-zA-Z\-0-9]+): (.+)|\s(.+))$`)
+var HeaderRegex = regexp.MustCompile(`^(([a-zA-Z\-0-9]+): (.*)|\s(.+))$`)
 
 func splitHeaders(body string) ([]Header, string) {
 	body = strings.Replace(body, "\r\n", "\n", -1)
