@@ -60,8 +60,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/sloonz/go-qprintable"
-	"golang.org/x/text/encoding/ianaindex"
 	"io"
 	"io/ioutil"
 	"log"
@@ -73,6 +71,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/sloonz/go-qprintable"
+	"golang.org/x/text/encoding/ianaindex"
 )
 
 type Client struct {
@@ -111,7 +112,7 @@ var gConfig = map[string]string{
 	"GSMTP_VERBOSE":          "Y",
 	"GSMTP_LOG_FILE":         "",    // Eg. /var/log/goguerrilla.log or leave blank if no logging
 	"GSMTP_TIMEOUT":          "100", // how many seconds before timeout.
-	"GSTMP_LISTEN_INTERFACE": "0.0.0.0:25",
+	"GSMTP_LISTEN_INTERFACE": "0.0.0.0:25",
 	"GSMTP_PUB_KEY":          "/etc/ssl/certs/ssl-cert-snakeoil.pem",
 	"GSMTP_PRV_KEY":          "/etc/ssl/private/ssl-cert-snakeoil.key",
 	"GM_ALLOWED_HOSTS":       "guerrillamail.de,guerrillamailblock.com",
@@ -163,9 +164,15 @@ func configure() {
 	for k, v := range myConfig {
 		gConfig[k] = v
 	}
+	for k, _ := range gConfig {
+		if v := os.Getenv(k); v != "" {
+			gConfig[k] = v
+		}
+	}
+
 	gConfig["GSMTP_VERBOSE"] = strings.ToUpper(verbose)
 	if len(iface) > 0 {
-		gConfig["GSTMP_LISTEN_INTERFACE"] = iface
+		gConfig["GSMTP_LISTEN_INTERFACE"] = iface
 	}
 	// map the allow hosts for easy lookup
 	if arr := strings.Split(gConfig["GM_ALLOWED_HOSTS"], ","); len(arr) > 0 {
@@ -224,11 +231,11 @@ func mainLoop() {
 		go nginxHTTPAuth()
 	}
 	// Start listening for SMTP connections
-	listener, err := net.Listen("tcp", gConfig["GSTMP_LISTEN_INTERFACE"])
+	listener, err := net.Listen("tcp", gConfig["GSMTP_LISTEN_INTERFACE"])
 	if err != nil {
 		logln(2, fmt.Sprintf("Cannot listen on port, %v", err))
 	} else {
-		logln(1, fmt.Sprintf("Listening on tcp %s", gConfig["GSTMP_LISTEN_INTERFACE"]))
+		logln(1, fmt.Sprintf("Listening on tcp %s", gConfig["GSMTP_LISTEN_INTERFACE"]))
 	}
 	var clientId int64
 	clientId = 1
@@ -657,7 +664,7 @@ func mailTransportDecode(str string, encoding_type string, charset string) strin
 		charset = fixCharset(charset)
 		// eg. charset can be "ISO-2022-JP"
 		//convstr, err := iconv.Conv(str, "UTF-8", charset)
-		encoding, err := ianaindex.IANA.Get(charset)
+		encoding, err := ianaindex.IANA.Encoding(charset)
 		if err != nil {
 			return str
 		}
@@ -727,7 +734,7 @@ func md5hex(str string) string {
 // This could perform auth and load balancing too
 // See http://wiki.nginx.org/MailCoreModule
 func nginxHTTPAuth() {
-	parts := strings.Split(gConfig["GSTMP_LISTEN_INTERFACE"], ":")
+	parts := strings.Split(gConfig["GSMTP_LISTEN_INTERFACE"], ":")
 	gConfig["HTTP_AUTH_HOST"] = parts[0]
 	gConfig["HTTP_AUTH_PORT"] = parts[1]
 	fmt.Println(parts)

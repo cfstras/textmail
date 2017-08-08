@@ -72,14 +72,13 @@ func sendMail(msg Message) {
 	from := msg.From
 	fmt.Println("Headers:")
 	for _, h := range msg.Headers {
-		fmt.Println(h.K, h.V)
+		//fmt.Println(h.K, h.V)
 		if h.K == "From" {
 			from = h.V
 		}
 	}
-	fmt.Println("Clear Body:", clearBody)
-
 	mp.Text = "[" + from + "] " + msg.Subject + ":\n" + clearBody
+	fmt.Printf("Sending as: %+v\n", mp)
 
 	respBody, _, err := client.Message.Send(mp)
 	if err != nil {

@@ -14,7 +14,7 @@ cat > goguerrilla.conf <<EOF
   "GSMTP_PUB_KEY": "",
   "GSMTP_TIMEOUT": "100",
   "GSMTP_VERBOSE": "Y",
-  "GSTMP_LISTEN_INTERFACE": "0.0.0.0:25",
+  "GSMTP_LISTEN_INTERFACE": "0.0.0.0:25",
   "NGINX_AUTH": "127.0.0.1:8025",
   "NGINX_AUTH_ENABLED": "N",
   "SGID": "1000",

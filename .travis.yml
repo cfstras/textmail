@@ -1,14 +1,12 @@
 language: go
 script:
-  - mkdir -p build
-  - go build -o build/textmail
-
+- mkdir -p build
+- go build -o build/textmail
 deploy:
-  - provider: releases
-    api_key:
-      secure: HNB9iHDuVUW799LFmsvYREM7wvi1mRCOu0eMqCbTGPLoymSsUAlZof5OHdHHZu2vN1o1JysBlTWXxNTtlvnobPpNIF0jlCupoUB+Teg3sAUz4QMocbYDa1eIcGq7K5eFQ4APiLndsPVJzWJO9xEXhNW9k0PycynkAehJyPfS3HWn3Q2sEchxq9R1O2Lcgo1ebHFh+QgacAoWgMQC6/sBCZ/Z1kCr6RE/QLfTqtaX4og1zo73Iato8gV7l6MF/VlYkwc/1yDxsodqeQ3T4bfCcjOefVd9gvir2qWv0W6eSKn19/MtzoIN4wWIBR5yGmqmBnz2SRXq791i4ux/eiY489OwrVEwbpyq62K8WCj6tB7dKEd4AJ6dva35L2r5gwYd5qXrsDnWrJYK7F+zriw7j3fiwpKThmbO4PZitaczwfhN0/UFRavwK3PW7jN5SaObtZ/afLFu29/IFuXFCNQwMkMnpnH3rYUxwcJGWTFEHEELyyxumvAKatO2QDL4BctdvicJWhy/cYs9XxaP1ffEVALDMTLd6X+dig1Ou9D19PB/dlF1aUAAg8p8/ceKCcPvoO2Pko8nwlbAk0CGTGn/D3kn0frawXuhYvGKaVBwyQWd5yzm0XUs13e6yQTHfqoE8eYehRKrZeIdlGkLGsSMgrp/ijCN7vSU77koI+oSIkw=
-    skip_cleanup: true
-    file:
-      - build/textmail
-    on:
-      tags: true
+  provider: releases
+  api_key:
+    secure: YqtoH6UAOohELxpgcXEwqPHubZV6fFqKVnAU5fSXq4AVuUAazYIjAR9uVIZk4a2rxGCqsVlySBTH4+GUX+BSFGLI2gTw/RXXDayG2or2fpdHionipn0zSgD5YK32A5jw/ORmdoLtd/45c9TGcxL5Jptc+fPYbhQxZfs+q9alhmQUWnLnMew/OvsZ4GXFKV+Q52lobq28lzl8eRLFiwvrTd34cAEPm4nzJnGNxTHqOtaI4MOjMps8LMVKNgqCidbmaP1Vwmw1DsZ91GgFH7DiKUhpT5/lpDoLAnJLefIh8rubsqV5yLhhWJjHVEYf0EVqSjScFwXC6+iP4SzsujRJwPGrl27mKIpu6svU74gG1AkX3Kgwx+UhqZzb9FbIoX6faG6VSldTMQXKQMtc39ATrWmENX+SrfE86gvK0WKE7XyimhwakM/77pU36iI8A0k0mk2KbAMlDnOlb9sjow78KnpZXkQOVwyq9S9k0sb5A5YjW8vr08zKUx22ePcrjJiPmWvvxoBAKlg9aUz5/UURyCAsrZ8rDmtwGnC+aFI4ilED9enf+RJfKd6l6+NtUce0eFrxtnyZBVA/LYem0z+cgrKFtKaVSD5RdnAZPInz4yaXHlHUovfDW9JUkfsCO6GP0e5jmeCX94BBUzrHVor/u0mAp55uSJh4LzlQ2VPWUC4=
+  file: build/textmail
+  on:
+    repo: cfstras/textmail
+    tags: true
